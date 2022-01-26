@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class CountPairService {
@@ -21,16 +23,12 @@ public class CountPairService {
      * @return
      */
     public List<Integer> getPairsEqualToSumByTwoLoop(int[] inputArray, int sum) {
-        List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < inputArray.length; i++) {
-            for (int j = i + 1; j < inputArray.length; j++) {
-                if (inputArray[i] + inputArray[j] == sum) {
-                    result.add(inputArray[i]);
-                    result.add(inputArray[j]);
-                }
-            }
-        }
-        return result;
+        return IntStream.range(0, inputArray.length)
+                .flatMap(i -> IntStream.range(i + 1, inputArray.length)
+                        .filter(j -> inputArray[i] + inputArray[j] == sum)
+                        .flatMap(j -> IntStream.of(inputArray[i], inputArray[j])))
+                .boxed()
+                .collect(Collectors.toList());
     }
 
     /**
