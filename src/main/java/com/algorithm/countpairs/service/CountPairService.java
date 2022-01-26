@@ -2,10 +2,7 @@ package com.algorithm.countpairs.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,16 +41,15 @@ public class CountPairService {
      * @return
      */
     public List<Integer> getPairsEqualToSumByMap(int[] inputArray, int sum) {
-        List<Integer> result = new ArrayList<>();
         Map<Integer, Integer> map = new HashMap();
-        for (int i : inputArray) {
+        return Arrays.stream(inputArray).flatMap(i -> {
             if (map.containsKey(sum - i)) {
-                result.add(i);
-                result.add(sum - i);
+                return IntStream.of(i, sum - i);
+            } else {
+                map.put(i, 1);
+                return null;
             }
-            map.put(i, 1);
-        }
-        return result;
+        }).boxed().collect(Collectors.toList());
     }
 
     /**
